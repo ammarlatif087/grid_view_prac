@@ -1,16 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class SliderScreen extends StatefulWidget {
-  SliderScreen({Key? key}) : super(key: key);
-
-  @override
-  State<SliderScreen> createState() => _SliderScreenState();
-}
-
-class _SliderScreenState extends State<SliderScreen> {
+class SliderScreen extends StatelessWidget {
   final CarouselController _controller = CarouselController();
-  int _currentIndex = 0;
+  final _currentIndex = 0.obs;
   final List<String> imgList = [
     'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
     'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
@@ -20,6 +14,8 @@ class _SliderScreenState extends State<SliderScreen> {
     'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80',
     'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
   ];
+
+  SliderScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +33,7 @@ class _SliderScreenState extends State<SliderScreen> {
               enlargeCenterPage: true,
               autoPlay: true,
               onPageChanged: (index, reason) {
-                setState(() {
-                  _currentIndex = index;
-                });
+                _currentIndex.value = index;
               },
             ),
             items: imgList
@@ -64,17 +58,19 @@ class _SliderScreenState extends State<SliderScreen> {
                     onTap: () {
                       _controller.animateToPage(e.key);
                     },
-                    child: Container(
-                      height: 12,
-                      width: 12,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 5),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.black.withOpacity(
-                          _currentIndex == e.key ? 0.9 : 0.4,
+                    child: Obx(
+                      () => (Container(
+                        height: 12,
+                        width: 12,
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 5),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black.withOpacity(
+                            _currentIndex.value == e.key ? 0.9 : 0.4,
+                          ),
                         ),
-                      ),
+                      )),
                     ),
                   ),
                 )
@@ -89,7 +85,7 @@ class _SliderScreenState extends State<SliderScreen> {
                   child: const Text('←'),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Flexible(
